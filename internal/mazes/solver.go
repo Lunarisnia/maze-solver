@@ -32,6 +32,12 @@ func Solve(maze [][]int) ([][]int, error) {
 		}
 
 		visited[y][x] = 4
+		if maze[y][x] == 2 {
+			visited[y][x] = 2
+		} else if maze[y][x] == 3 {
+			visited[y][x] = 3
+		}
+
 		if isSolved(maze[y][x]) {
 			solved = true
 			return

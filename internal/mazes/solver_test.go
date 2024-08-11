@@ -6,7 +6,7 @@ import (
 )
 
 func Test_Solver(t *testing.T) {
-	maze, err := loadMaze("/Users/louna/Desktop/Work/Personal/maze-solver/puzzles/puzzle_01.png")
+	maze, err := LoadMaze("/Users/louna/Desktop/Work/Personal/maze-solver/puzzles/puzzle_01.png")
 	if err != nil {
 		t.Fail()
 	}

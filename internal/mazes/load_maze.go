@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func loadMaze(mazePath string) ([][]int, error) {
+func LoadMaze(mazePath string) ([][]int, error) {
 	file, err := os.Open(mazePath)
 	defer func(file *os.File) {
 		err := file.Close()
