@@ -9,10 +9,13 @@ import (
 
 const maxUint16 = 256*256 - 1
 
-func colorCell(maze [][]int, dest *image.RGBA, additive bool) {
-	for y, rows := range maze {
+func colorCell(maze *Maze, dest *image.RGBA, additive bool) {
+	for y, rows := range maze.World {
 		for x, col := range rows {
-			if additive && maze[y][x] != 4 {
+			if additive && ((maze.Start[0] == y && maze.Start[1] == x) || (maze.End[0] == y && maze.End[1] == x)) {
+				continue
+			}
+			if additive && maze.World[y][x] != 4 {
 				continue
 			}
 			cellColor := color.RGBA64{
@@ -46,13 +49,13 @@ func colorCell(maze [][]int, dest *image.RGBA, additive bool) {
 
 }
 
-func Save(originalMaze [][]int, solution [][]int) *image.RGBA {
-	maze := image.NewRGBA(image.Rect(0, 0, len(solution[0]), len(solution)))
+func Save(originalMaze *Maze, solution *Maze) *image.RGBA {
+	maze := image.NewRGBA(image.Rect(0, 0, len(solution.World[0]), len(solution.World)))
 
 	colorCell(originalMaze, maze, false)
 	colorCell(solution, maze, true)
 
-	f, err := os.Create("solved/maze.png")
+	f, err := os.Create("/Users/louna/Desktop/Work/Personal/maze-solver/solved/maze.png")
 	defer f.Close()
 	if err != nil {
 		panic(err)

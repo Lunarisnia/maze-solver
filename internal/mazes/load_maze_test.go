@@ -12,9 +12,9 @@ func Test_LoadMaze(t *testing.T) {
 		t.Fail()
 	}
 
-	for i := range maze {
-		for j := range maze[i] {
-			fmt.Printf("%v ", maze[i][j])
+	for i := range maze.World {
+		for j := range maze.World[i] {
+			fmt.Printf("%v ", maze.World[i][j])
 		}
 
 		fmt.Println()

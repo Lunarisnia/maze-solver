@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func LoadMaze(mazePath string) ([][]int, error) {
+func LoadMaze(mazePath string) (*Maze, error) {
 	file, err := os.Open(mazePath)
 	defer func(file *os.File) {
 		err := file.Close()
@@ -23,6 +23,11 @@ func LoadMaze(mazePath string) ([][]int, error) {
 		return nil, err
 	}
 
+	mazeWrapper := Maze{
+		Start: nil,
+		End:   nil,
+		World: nil,
+	}
 	maze := make([][]int, img.Bounds().Max.Y)
 	for i := range maze {
 		maze[i] = make([]int, img.Bounds().Max.X)
@@ -40,15 +45,18 @@ func LoadMaze(mazePath string) ([][]int, error) {
 
 			cellColor := 0
 			if r == 1 && g == 0 && b == 0 {
+				mazeWrapper.Start = []int{y, x}
 				cellColor = 2
 			} else if r == 1 && g == 1 && b == 1 {
 				cellColor = 1
 			} else if r == 0 && g == 1 && b == 0 {
+				mazeWrapper.End = []int{y, x}
 				cellColor = 3
 			}
 			maze[y][x] = cellColor
 		}
 	}
+	mazeWrapper.World = maze
 
-	return maze, nil
+	return &mazeWrapper, nil
 }

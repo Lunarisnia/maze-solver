@@ -9,7 +9,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	solved, err := mazes.Solve(maze)
+	aStar := mazes.NewAStar(maze)
+	solved, err := mazes.Solve(aStar)
 	if err != nil {
 		panic(err)
 	}

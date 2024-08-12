@@ -5,23 +5,21 @@ import (
 	"testing"
 )
 
-func Test_Solver(t *testing.T) {
+func Test_AStar(t *testing.T) {
 	maze, err := LoadMaze("/Users/louna/Desktop/Work/Personal/maze-solver/puzzles/puzzle_01.png")
 	if err != nil {
-		t.Fail()
+		panic(err)
 	}
-	floodFill := NewFloodFill(maze)
-	solved, err := Solve(floodFill)
+	aStar := NewAStar(maze)
+	solved, err := Solve(aStar)
 	if err != nil {
-		fmt.Println(err)
-		t.Fail()
+		panic(err)
 	}
 
 	for _, rows := range solved.World {
 		for _, col := range rows {
 			fmt.Printf("%v ", col)
 		}
-
 		fmt.Println()
 	}
 }

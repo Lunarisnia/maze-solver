@@ -11,7 +11,8 @@ func Test_Save(t *testing.T) {
 		fmt.Println(err)
 		t.Fail()
 	}
-	solved, err := Solve(maze)
+	floodFill := NewFloodFill(maze)
+	solved, err := Solve(floodFill)
 	if err != nil {
 		fmt.Println(err)
 		t.Fail()
