@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"maze-solver/internal/api/models"
 	"maze-solver/internal/mazes"
@@ -33,11 +34,16 @@ func (s *SolveMazeController) SubmitMaze(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "unknown algorithm"})
 		return
 	}
+	solvable := true
 	solved, err := mazes.Solve(algo)
-	if err != nil {
+	if err != nil && !errors.Is(err, mazes.UnsolvableError{}) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "error solving maze"})
 	}
+	if err != nil && errors.Is(err, mazes.UnsolvableError{}) {
+		solvable = false
+	}
 	c.JSON(http.StatusOK, gin.H{
+		"solvable": solvable,
 		"solution": solved,
 	})
 }
