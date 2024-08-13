@@ -1,18 +1,16 @@
 package main
 
 import (
-	"maze-solver/internal/mazes"
+	"github.com/gin-gonic/gin"
+	"maze-solver/internal/api"
 )
 
 func main() {
-	maze, err := mazes.LoadMaze("/Users/louna/Desktop/Work/Personal/maze-solver/puzzles/puzzle_01.png")
+	r := gin.Default()
+	api.NewSolveMazeController(r.Group("api/v1"))
+
+	err := r.Run()
 	if err != nil {
 		panic(err)
 	}
-	aStar := mazes.NewAStar(maze)
-	solved, err := mazes.Solve(aStar)
-	if err != nil {
-		panic(err)
-	}
-	mazes.Save(maze, solved)
 }

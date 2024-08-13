@@ -67,11 +67,16 @@ func (f *FloodFill) Solve() (*Maze, error) {
 			break
 		}
 		for x := range f.maze.World[y] {
-			if f.maze.World[y][x] != 0 && visited[y][x] != 4 {
+			if f.maze.World[y][x] != 0 && visited[y][x] != 4 && f.maze.World[y][x] != 3 {
 				floodFill(x, y)
 			}
 		}
 	}
+
+	if !solved {
+		return nil, UnsolvableError{}
+	}
+
 
 	return &solution, nil
 }

@@ -46,10 +46,6 @@ func weightWorld(maze Maze) [][]pqueue.Weight {
 	return weightedWorld
 }
 
-type Node struct {
-	Parent *Node
-	Value  *pqueue.Weight
-}
 
 func (a *AStar) Solve() (*Maze, error) {
 	weightedWorld := weightWorld(a.maze)
@@ -57,7 +53,6 @@ func (a *AStar) Solve() (*Maze, error) {
 	minHeap := pqueue.PriorityQueue{&startWeight}
 	heap.Init(&minHeap)
 
-	found := false
 	visited := make([][]bool, len(a.maze.World))
 	for i := range visited {
 		visited[i] = make([]bool, len(a.maze.World[0]))
@@ -65,11 +60,7 @@ func (a *AStar) Solve() (*Maze, error) {
 	var pointer *pqueue.Weight
 	var findPath func(w *pqueue.Weight)
 	findPath = func(w *pqueue.Weight) {
-		if found {
-			return
-		}
 		if w.Position.Equal(a.maze.End) {
-			found = true
 			pointer = w
 			return
 		}
@@ -86,8 +77,10 @@ func (a *AStar) Solve() (*Maze, error) {
 				}
 			}
 		}
-		if len(weightedWorld) > len(weightedWorld)-1 {
+		if len(minHeap) > 0 {
 			findPath(heap.Pop(&minHeap).(*pqueue.Weight))
+		} else {
+			return
 		}
 	}
 	findPath(heap.Pop(&minHeap).(*pqueue.Weight))
@@ -95,13 +88,18 @@ func (a *AStar) Solve() (*Maze, error) {
 	safePath := make([]ds.Vector2, 0)
 	var getPath func(p *pqueue.Weight)
 	getPath = func(p *pqueue.Weight) {
-		if p != nil {
-			safePath = append(safePath, p.Position)
-			getPath(p.Parent)
+		if p == nil {
+			return
 		}
-		return
+		safePath = append(safePath, p.Position)
+		getPath(p.Parent)
 	}
 	getPath(pointer)
+	if len(safePath) == 0 {
+		return nil, UnsolvableError{}
+	}
+
+	// We can use pop the stack for position in each step
 	solution := Maze{
 		Start: a.maze.Start,
 		End:   a.maze.End,
